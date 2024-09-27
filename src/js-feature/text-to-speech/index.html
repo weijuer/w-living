@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Speech</title>
+</head>
+
+<body>
+    <main id="app">
+        <form>
+            <fieldset>
+                <legend>Text to Speech</legend>
+                <h1>Text to Speech</h1>
+                <textarea v-model="text" rows="6" placeholder="Enter text here..."></textarea>
+                <button @click="speak()" type="button">Speak</button>
+
+                <label for="">Voice</label>
+                <select v-model="voiceSettings.selectedVoice" placeholder="Select a voice">
+                    <template v-for="voice in voiceOptions" :key="voice.value">
+                        <option value=""></option>
+                    </template>
+                </select>
+
+                <label for="">Rate</label>
+                <input v-model="voiceSettings.rate" :min="0.5" :max="2" :step="0.1" type="range" />
+
+                <label for="">Pitch</label>
+                <input v-model="voiceSettings.pitch" :min="0" :max="2" :step="0.1" type="range" />
+
+            </fieldset>
+        </form>
+    </main>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "https://esm.sh/vue/dist/vue.esm-bundler.js"
+          }
+        }
+    </script>
+
+    <script type="module">
+        import { createApp, ref, reactive, computed, onMounted } from "vue";
+
+        const app = createApp();
+        app.mount('#app');
+
+        const text = ref("");
+        const voiceOptions = ref([]);
+        const voiceSettings = reactive({
+            selectedVoice: "",
+            rate: 1,
+            pitch: 1,
+        });
+
+        const speak = () => {
+            if (!text.value) {
+                alert("Please enter some text.");
+                return;
+            }
+
+            const utterance = new SpeechSynthesisUtterance(text.value);
+
+            utterance.voice = window.speechSynthesis
+                .getVoices()
+                .find((voice) => voice.name === voiceSettings.selectedVoice);
+            utterance.rate = voiceSettings.rate;
+            utterance.pitch = voiceSettings.pitch;
+
+            window.speechSynthesis.speak(utterance);
+        };
+
+        const populateVoiceList = () => {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                voiceOptions.value = voices.map((voice) => ({
+                    label: `${voice.name} (${voice.lang})`,
+                    value: voice.name,
+                }));
+
+                voiceSettings.selectedVoice = voices[0].name;
+            }
+        };
+
+        return {
+            text,
+            voiceOptions,
+            voiceSettings,
+            speak
+        }
+
+        onMounted(() => {
+            console.log('onMounted', voiceSettings)
+            populateVoiceList();
+        });
+    </script>
+</body>
+
+</html>
