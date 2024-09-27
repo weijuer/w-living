@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS-only form validation</title>
+
+    <style>
+        @layer reset {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+        }
+
+        @layer baselayout {
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+                font-size: 112.5%;
+                margin-left: auto;
+                margin-right: auto;
+                max-width: 40em;
+                width: 88%;
+            }
+
+            main {
+                padding: 2rem;
+            }
+
+            form~form {
+                margin-top: 2rem;
+            }
+
+            /**
+            * Form Styles
+            */
+            fieldset {
+                display: block;
+                padding: 14px;
+                color: #333;
+                border: #ccc solid 1px;
+
+                legend {
+                    color: #333;
+                    font-weight: 800;
+                    background: rgba(0, 0, 0, 0.25);
+                    padding: 4px 6px;
+                }
+            }
+
+            label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 0.5em;
+            }
+
+            .label-normal {
+                font-weight: normal;
+            }
+
+            .pattern {
+                color: #808080;
+                font-size: 0.8em;
+                font-weight: normal;
+            }
+
+            .supports-color .color,
+            .supports-date .date,
+            .supports-time .time,
+            .supports-month .mont {
+                display: none;
+            }
+
+            input,
+            select {
+                display: inline-block;
+                font-size: 1em;
+                margin-bottom: 1em;
+                padding: 0.25em 0.5em;
+                width: 100%;
+            }
+
+            [type="checkbox"],
+            [type="radio"] {
+                margin-bottom: 0.5em;
+                width: auto;
+            }
+
+            .button {
+                background-color: #0088cc;
+                border: 1px solid #0088cc;
+                border-radius: 1px;
+                color: #ffffff;
+                display: inline-block;
+                font-size: 0.9375em;
+                font-weight: normal;
+                line-height: 1.2;
+                margin-right: 0.3125em;
+                margin-bottom: 0.3125em;
+                padding: 0.5em 0.6875em;
+                width: auto;
+            }
+
+            .button:active,
+            .button:focus,
+            .button:hover {
+                background-color: #005580;
+                border-color: #005580;
+                color: #ffffff;
+                text-decoration: none;
+            }
+
+            .button:active {
+                box-shadow: inset 0 0.15625em 0.25em rgba(0, 0, 0, 0.15), 0 1px 0.15625em rgba(0, 0, 0, 0.05);
+            }
+        }
+
+        @layer validation {
+            fieldset:invalid {
+                border-color: red;
+            }
+
+            fieldset:invalid:before {
+                content: attr(data-error-message);
+            }
+
+            span.errorMessage {
+                display: none;
+            }
+
+            input:invalid:not(:focus)+span.errorMessage {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <form>
+            <fieldset>
+                <legend>Basic Form</legend>
+                <div>
+                    <label for="text">Text Input</label>
+                    <input type="text" id="text" required />
+                </div>
+                <div>
+                    <label for="minmaxlength">Text with Min and Max Length</label>
+                    <input type="text" id="minmaxlength" minlength="3" maxlength="12" />
+                </div>
+                <div>
+                    <label for="password">Password (must contain at least 1 uppercase character, 1 lowercase
+                        character, and 1 number)</label>
+                    <input type="password" id="password" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"
+                        required />
+                </div>
+                <div>
+                    <label for="passwordwithtitle">Password with Title Attribute</label>
+                    <input type="password" id="passwordwithtitle" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"
+                        title="Please include at least 1 uppercase character, 1 lowercase character, and 1 number."
+                        required />
+                </div>
+                <div>
+                    <label for="passwordcombined">Password with Pattern and Min Length</label>
+                    <input type="password" id="passwordcombined" minlength="8"
+                        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"
+                        title="Please include at least 1 uppercase character, 1 lowercase character, and 1 number."
+                        required />
+                </div>
+                <button type="submit" class="button">Submit</button>
+            </fieldset>
+        </form>
+        <form>
+            <fieldset>
+                <legend>Number Form</legend>
+                <div>
+                    <label for="number">Number</label>
+                    <input type="number" id="number" pattern="[-+]?[0-9]">
+                </div>
+                <div>
+                    <label for="numberfloat">Numbers with Decimals</label>
+                    <input type="number" id="numberfloat" step="any" pattern="[-+]?[0-9]*[.,]?[0-9]+">
+                </div>
+                <div>
+                    <label for="numberrange">Number with a Min and Max Range (3-42)</label>
+                    <input type="text" id="numberrange" min="3" max="42" pattern="[3-9]|[1-3][0-9]|4[0-2]">
+                </div>
+                <button type="submit" class="button">Submit</button>
+            </fieldset>
+        </form>
+    </main>
+</body>
+
+</html>
