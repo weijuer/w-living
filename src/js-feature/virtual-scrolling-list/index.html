@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Scrolling List</title>
+
+    <style>
+        @layer reset {
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: Arial, sans-serif;
+            }
+        }
+
+        @layer baselayout {
+            #app {
+                max-width: 640px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+
+            .list {
+                border: 2px solid red;
+                border-radius: 3px;
+            }
+
+            .item {
+                display: flex;
+                flex-direction: column;
+                border-bottom: 1px solid lightgrey;
+                padding: 1em;
+            }
+        }
+
+        @layer virtual-scrollling-list {
+            .virtual-list {
+                position: relative;
+                overflow-y: auto;
+                height: 400px;
+                /* 根据需要设置容器高度 */
+            }
+
+            .virtual-list-item {
+                position: absolute;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 10px;
+                border-bottom: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main id="app">
+        <div class="wrapper">
+            <div class="list">
+                <template v-for="item in items" :key="item">
+                    <div class="item">
+                        <div class="id">#{{ item.id }} - {{ item.text }}</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </main>
+
+    <template id="virtual-list-template">
+        <div class="virtual-list" ref="scrollContainer" @scroll="onScroll">
+            <!-- 占位元素，用来撑开滚动区域的总高度 -->
+            <div :style="{ height: totalHeight + 'px' }"></div>
+
+            <!-- 渲染可见的元素 -->
+            <div v-for="(item, index) in visibleItems" :key="item.id" :style="getItemStyle(index)"
+                class="virtual-list-item">
+                <!-- 使用插槽渲染表格内容 -->
+                <slot :item="item"></slot>
+            </div>
+        </div>
+    </template>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "../libs/vue/vue.esm-browser.js"
+          }
+        }
+    </script>
+
+    <!-- <script src="./main.js" type="module"></script> -->
+
+    <script type="module">
+        import { createApp, ref, computed, reactive, onMounted } from "vue";
+        import VirtualScrollingList from "./virtual-scrolling-list.js";
+        import { getData } from './data.js'
+
+        const app = createApp({
+            components: { VirtualScrollingList },
+            setup() {
+
+                const items = computed(() => {
+                    return getData(10000);
+                });
+
+                onMounted(() => {
+
+                });
+
+                return {
+                    items
+                }
+            }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
