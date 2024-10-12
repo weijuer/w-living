@@ -28,35 +28,6 @@
                 margin: 0 auto;
                 padding: 2rem;
             }
-
-            .list {
-                border: 2px solid red;
-                border-radius: 3px;
-            }
-
-            .item {
-                display: flex;
-                flex-direction: column;
-                border-bottom: 1px solid lightgrey;
-                padding: 1em;
-            }
-        }
-
-        @layer virtual-scrollling-list {
-            .virtual-list {
-                position: relative;
-                overflow-y: auto;
-                height: 400px;
-                /* 根据需要设置容器高度 */
-            }
-
-            .virtual-list-item {
-                position: absolute;
-                width: 100%;
-                box-sizing: border-box;
-                padding: 10px;
-                border-bottom: 1px solid #eee;
-            }
         }
     </style>
 </head>

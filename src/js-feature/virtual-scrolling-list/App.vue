@@ -1,38 +1,17 @@
 <template>
-    <div id="app">
-        <div class="wrapper">
-            <div class="list">
-                <p v-for="item in items" :key="item">
-                    {{ item }}
-                </p>
-            </div>
-        </div>
-    </div>
+  <section>
+    <virtual-scrolling-list :items="items">
+      <template #default="{ item }">
+        <div class="id">#{{ item.id }} - {{ item.text }}</div>
+      </template>
+    </virtual-scrolling-list>
+  </section>
 </template>
 
 <script setup>
-import { getData } from './data.js'
+import { computed } from "vue";
+import { getDataJson } from "./data.js";
+import VirtualScrollingList from "./VirtualScrollingList.vue";
 
-export default {
-    name: 'App',
-    data() {
-        return {
-            items: getData(100000)
-        }
-    }
-}
+const items = computed(() => getDataJson(1000));
 </script>
-
-<style>
-#app {
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 1em;
-    padding: 1em;
-}
-
-.list {
-    border: 2px solid red;
-    border-radius: 3px;
-}
-</style>

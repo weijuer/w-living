@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Css Transform Functions</title>
+    <style>
+        @layer reset {
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+            }
+        }
+
+        @layer baselayout {
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            #app {
+                min-width: 100vw;
+                min-height: 100vh;
+            }
+        }
+
+        @layer clock {
+            .clock {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                width: 150px;
+                height: 150px;
+                border: 2px solid #000;
+                border-radius: 50%;
+                background: #d6d6d6;
+            }
+
+            .clock-hands {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                width: 80%;
+                height: 80%;
+                border: 1px solid red;
+            }
+
+            .hour-hand,
+            .minute-hand,
+            .second-hand {
+                position: absolute;
+                width: 50%;
+                height: 4px;
+                background: #000;
+                transform: translateX(50%);
+                transform-origin: left center;
+            }
+
+            .hour-hand {
+                animation: hour-hand 12s linear infinite;
+            }
+
+            @keyframes hour-hand {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .minute-hand {
+                animation: minute-hand 60s linear infinite;
+            }
+
+            @keyframes minute-hand {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .second-hand {
+                animation: second-hand 60s linear infinite;
+            }
+
+            @keyframes second-hand {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <main id="app">
+        <div class="container">
+            <div class="clock">
+                <div class="clock-hands">
+                    <div class="hour-hand"></div>
+                    <!-- <div class="minute-hand"></div> -->
+                    <!-- <div class="second-hand"></div> -->
+                </div>
+            </div>
+
+            <section class="transform-list">
+                <div class="transform-box">rotate</div>
+            </section>
+
+            <!-- <template v-for="item in transforms">
+                <div :class="['transform-box', item]">{{ item }}</div>
+            </template> -->
+        </div>
+    </main>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "https://esm.sh/vue/dist/vue.esm-bundler.js"
+          }
+        }
+    </script>
+    <script type="module">
+        import { createApp, ref, computed, reactive, onMounted } from "vue";
+
+        const app = createApp({
+            setup() {
+                const transforms = ref([
+                    'rotate',
+                    'scale',
+                    'skew',
+                    'translate',
+                    'perspective',
+                    'multiple'
+                ])
+
+                return {
+                    transforms
+                }
+            }
+        })
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>
