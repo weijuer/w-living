@@ -1,5 +1,6 @@
 <template>
   <section>
+    <h2> Virtual Scrolling List </h2>
     <virtual-scrolling-list :items="items">
       <template #default="{ item }">
         <div class="id">#{{ item.id }} - {{ item.text }}</div>
