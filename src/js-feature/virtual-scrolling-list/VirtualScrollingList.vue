@@ -44,15 +44,17 @@ const calculateVisibleItems = () => {
 const totalHeight = computed(() => props.items.length * props.itemHeight);
 
 const onScroll = () => {
-    calculateVisibleItems();
     updateTranslateY();
+    calculateVisibleItems();
 };
 
 const updateTranslateY = () => {
     if (contentRef.value && containerRef.value) {
         const contentHeight = contentRef.value.scrollHeight;
         const maxTranslateY = contentHeight - props.containerHeight;
-        translateY.value = Math.max(0, Math.min(maxTranslateY, containerRef.value.scrollTop));
+        console.log('updateTranslateY', containerRef.value.scrollTop)
+        // translateY.value = Math.max(0, Math.min(maxTranslateY, containerRef.value.scrollTop));
+        translateY.value = containerRef.value.scrollTop;
     }
 };
 
