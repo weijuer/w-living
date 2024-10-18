@@ -1,0 +1,14 @@
+@import url('./components/common/reset.css');
+@import url('./components/avatar/avatar.css');
+@import url('./components/badge/badge.css');
+
+body {
+    font-family: system-ui, sans-serif;
+}
+
+w-header,
+main {
+    margin: 1em;
+    padding: 1em;
+    border: 1px dashed black;
+}
