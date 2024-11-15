@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>css shapes</title>
+    <style>
+        @layer reset {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+        }
+
+        @layer layout {
+            .heart {
+                --c: red;
+                height: 200px;
+                width: 200px;
+                aspect-ratio: 1;
+                background:
+                    /* 1 */
+                    radial-gradient(circle at 60% 65%, var(--c) 64%, #0000 65%) top left/50% 50%,
+                    /* 2 */
+                    radial-gradient(circle at 40% 65%, var(--c) 64%, #0000 65%) top right/50% 50%,
+                    /* 3 */
+                    conic-gradient(from -45deg at 50% 85.5%, var(--c) 90deg, #0000 0) bottom/100% 50%;
+                background-repeat: no-repeat;
+            }
+
+            .heart2 {
+                --c: red;
+
+                height: 200px;
+                width: 200px;
+                aspect-ratio: 1;
+                background:
+                    radial-gradient(circle at 60% 65%, var(--c) 64%, #0000 65%) top left/50% 50%,
+                    radial-gradient(circle at 40% 65%, var(--c) 64%, #0000 65%) top right/50% 50%,
+                    radial-gradient(circle at 60% 35%, var(--c) 64%, #0000 65%) bottom left/50% 50%,
+                    radial-gradient(circle at 40% 35%, var(--c) 64%, #0000 65%) bottom right/50% 50%;
+                background-repeat: no-repeat;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <!-- <div class="heart"></div> -->
+        <div class="heart2"></div>
+    </main>
+</body>
+
+</html>
