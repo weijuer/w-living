@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hamburger Menu</title>
+    <style>
+        /* General Reset */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Hamburger Menu Container */
+        .hamburger-menu {
+            position: relative;
+        }
+
+        /* Hide the Checkbox */
+        #menu-toggle {
+            display: none;
+        }
+
+        /* Hamburger Icon */
+        .menu-icon {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            width: 30px;
+            gap: 5px;
+        }
+
+        .menu-icon span {
+            background-color: #333;
+            height: 4px;
+            border-radius: 2px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        /* Menu Styles */
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu li {
+            padding: 10px 20px;
+        }
+
+        .menu li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Show Menu on Checkbox Checked */
+        #menu-toggle:checked~.menu {
+            display: block;
+        }
+
+        /* Animate Hamburger Icon */
+        #menu-toggle:checked+.menu-icon span:nth-child(1) {
+            transform: rotate(45deg) translateY(10px);
+        }
+
+        #menu-toggle:checked+.menu-icon span:nth-child(2) {
+            background-color: transparent;
+        }
+
+        #menu-toggle:checked+.menu-icon span:nth-child(3) {
+            transform: rotate(-45deg) translateY(-10px);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="hamburger-menu">
+        <input type="checkbox" id="menu-toggle" />
+        <label for="menu-toggle" class="menu-icon">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+        <ul class="menu">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>web-bluetooth</title>
+</head>
+
+<body>
+    <button>Connect</button>
+
+    <script type="module">
+        class HeartRateMonitor {
+
+            constructor() {
+                this.device = null;
+                this.onDisconnected = this.onDisconnected.bind(this);
+            }
+
+            async request() {
+                let options = {
+                    "filters": [{
+                        "services": ["heart_rate"]
+                    }]
+                };
+                this.device = await navigator.bluetooth.requestDevice(options);
+                if (!this.device) {
+                    throw "No device selected";
+                }
+                this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
+            }
+
+            async connect() {
+                if (!this.device) {
+                    return Promise.reject('Device is not connected.');
+                }
+                await this.device.gatt.connect();
+            }
+
+            async readHeartratemeasurement() {
+                const service = await this.device.gatt.getPrimaryService("heart_rate");
+                const characteristic = await service.getCharacteristic("heart_rate_measurement");
+                await characteristic.readValue();
+            }
+
+            async writeHeartratemeasurement(data) {
+                const service = await this.device.gatt.getPrimaryService("heart_rate");
+                const characteristic = await service.getCharacteristic("heart_rate_measurement");
+                await characteristic.writeValue(data);
+            }
+
+            async startHeartratemeasurementNotifications(listener) {
+                const service = await this.device.gatt.getPrimaryService("heart_rate");
+                const characteristic = await service.getCharacteristic("heart_rate_measurement");
+                await characteristic.startNotifications();
+                characteristic.addEventListener('characteristicvaluechanged', listener);
+            }
+
+            async stopHeartratemeasurementNotifications(listener) {
+                const service = await this.device.gatt.getPrimaryService("heart_rate");
+                const characteristic = await service.getCharacteristic("heart_rate_measurement");
+                await characteristic.stopNotifications();
+                characteristic.removeEventListener('characteristicvaluechanged', listener);
+            }
+
+            disconnect() {
+                if (!this.device) {
+                    return Promise.reject('Device is not connected.');
+                }
+                return this.device.gatt.disconnect();
+            }
+
+            onDisconnected() {
+                console.log('Device is disconnected.');
+            }
+        }
+
+        const heartRateMonitor = new HeartRateMonitor();
+
+        document.querySelector('button').addEventListener('click', async event => {
+            try {
+                await heartRateMonitor.request();
+                await heartRateMonitor.connect();
+                /* Do something with heartRateMonitor... */
+            } catch (error) {
+                console.log(error);
+            }
+        });
+    </script>
+</body>
+
+</html>
