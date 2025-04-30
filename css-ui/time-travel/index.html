@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Travel</title>
+    <style>
+        @layer reset {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+                background-color: #f0f0f0;
+                /* Added background color */
+                color: #333;
+                /* Added text color */
+            }
+        }
+
+        @layer base {
+            html {
+                color-scheme: light dark;
+            }
+
+            [data-theme='light'] {
+                color-scheme: light only;
+            }
+
+            [data-theme='dark'] {
+                color-scheme: dark only;
+            }
+
+            *,
+            *:after,
+            *:before {
+                box-sizing: border-box;
+            }
+
+            body {
+                background: light-dark(#fff, #000);
+                display: grid;
+                place-items: center;
+                min-height: 100vh;
+                font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
+                    Helvetica, Arial, sans-serif, system-ui;
+            }
+
+            body::before {
+                --size: 45px;
+                --line: color-mix(in lch, canvasText, transparent 70%);
+
+                content: '';
+                height: 100vh;
+                width: 100vw;
+                position: fixed;
+                background: linear-gradient(90deg,
+                        var(--line) 1px,
+                        transparent 1px var(--size)) 50% 50% / var(--size) var(--size),
+                    linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% / var(--size) var(--size);
+                mask: linear-gradient(-20deg, transparent 50%, white);
+                top: 0;
+                transform-style: flat;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            /* Utilities */
+            .sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border-width: 0;
+            }
+        }
+
+        @layer layout {
+            main {
+                display: flex;
+                gap: 0.5ch;
+                flex-direction: column;
+                text-transform: uppercase;
+                font-family: 'Roboto Mono', monospace;
+                padding: 6px;
+                background: light-dark(hsl(0 0% 40%), hsl(0 0% 0%));
+            }
+        }
+
+        @layer flip {
+
+            .flip-line {
+                display: flex;
+                gap: 0.5ch;
+            }
+
+            .flip {
+                --font-level: 8;
+                font-size: 2.5rem;
+                color: var(--color, #fff);
+                width: 1.5ch;
+                line-height: 1.2;
+                display: inline-block;
+                height: 1lh;
+                text-align: center;
+                position: relative;
+                transform-style: preserve-3d;
+                perspective: calc(var(--perspective) * 1em);
+
+                &::before,
+                &::after {
+                    content: '';
+                    position: absolute;
+                    width: calc(10% - 0.05em);
+                    height: calc(20% - 0.05em);
+                    background: color-mix(in oklch, canvas, canvasText 15%);
+                    top: 50%;
+                    translate: 0 -50%;
+                }
+
+                &::before {
+                    left: 0;
+                }
+
+                &::after {
+                    right: 0;
+                }
+
+                div {
+                    position: absolute;
+                    transform-style: preserve-3d;
+                    overflow: hidden;
+                    inset: 0;
+                    background: radial-gradient(100% 100% at 50% 100%,
+                            light-dark(hsl(0 0% 88% / 0.2), hsl(0 0% 60% / 0.2)),
+                            #0000),
+                        light-dark(hsl(0 0% 92%), hsl(0 0% 15%));
+
+                    &:nth-of-type(odd) {
+                        filter: brightness(1);
+
+                        clip-path: polygon(0 0,
+                                100% 0,
+                                100% 40%,
+                                calc(90% + 0.025em) 40%,
+                                calc(90% + 0.025em) 48%,
+                                calc(10% - 0.025em) 48%,
+                                calc(10% - 0.025em) 40%,
+                                0 40%);
+                    }
+
+                    &:nth-of-type(even) {
+                        z-index: 2;
+                        rotate: x 0deg;
+                        backface-visibility: hidden;
+
+                        clip-path: polygon(0 60%,
+                                calc(10% - 0.025em) 60%,
+                                calc(10% - 0.025em) 52%,
+                                calc(90% + 0.025em) 52%,
+                                calc(90% + 0.025em) 60%,
+                                100% 60%,
+                                100% 100%,
+                                0 100%);
+                    }
+                }
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <section class="flip-line">
+            <div class="flip">
+                <div>A</div>
+                <div>A</div>
+            </div>
+            <div class="flip">
+                <div>B</div>
+                <div>B</div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

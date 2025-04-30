@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Carousels</title>
+    <style>
+        @layer reset {
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+        }
+        
+        @layer decor {
+            html {
+                color-scheme: dark;
+            }
+            
+            .carousel {
+                border: 5px solid CanvasText;
+                padding: 1.5rem;
+            
+                > li {
+                    list-style: "";
+                }
+            }
+        }
+
+        @layer carousel {
+            .carousel {
+                display: grid;
+                grid-auto-flow: column;
+                grid-auto-columns: 40%;
+                gap: 2rem;
+                
+                scroll-snap-type: x mandatory;
+
+                > li {
+                    scroll-snap-align: center;
+                }
+            }
+
+            .carousel::scroll-button(left) {
+                content: "Left";
+            }
+
+            .carousel::scroll-button(right) {
+                content: "Right";
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <p class="support-notice">🐤 <strong>Heads-up!</strong> Your browser does not support CSS Carousels. Try opening the demo in Chrome 135+ instead.</p>
+
+    <ul class="carousel">
+      <li>
+        <h2>Item Heading</h2>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde ad placeat nisi sint quo omnis inventore numquam enim iure voluptates quaerat minus sit, aut labore eaque expedita! Minima, consectetur rerum.</p>
+      </li>
+      <li>
+        <h2>Item Heading</h2>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde ad placeat nisi sint quo omnis inventore numquam enim iure voluptates quaerat minus sit, aut labore eaque expedita! Minima, consectetur rerum.</p>
+      </li>
+      <li>
+        <h2>Item Heading</h2>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde ad placeat nisi sint quo omnis inventore numquam enim iure voluptates quaerat minus sit, aut labore eaque expedita! Minima, consectetur rerum.</p>
+      </li>
+      <li>
+        <h2>Item Heading</h2>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde ad placeat nisi sint quo omnis inventore numquam enim iure voluptates quaerat minus sit, aut labore eaque expedita! Minima, consectetur rerum.</p>
+      </li>
+      <li>
+        <h2>Item Heading</h2>
+        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Unde ad placeat nisi sint quo omnis inventore numquam enim iure voluptates quaerat minus sit, aut labore eaque expedita! Minima, consectetur rerum.</p>
+      </li>
+    </ul>
+</body>
+</html>
