@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>数学口算题生成器</title>
+</head>
+
+<body>
+    <main>
+        <math-exercise-generator></math-exercise-generator>
+    </main>
+
+    <script type="importmap">
+        {
+          "imports": {
+            "@babel/runtime/helpers/typeof": "./plugins/typeof.js",
+            "fflate": "./plugins/fflate.es.js",
+            "jspdf": "./plugins/jspdf.es.min.js"
+          }
+        }
+    </script>
+    <script src="./app.js" type="module"></script>
+</body>
+
+</html>

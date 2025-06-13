@@ -1,0 +1,56 @@
+{
+    "name": "前端开发百宝箱",
+    "version": "1.0.0",
+    "manifest_version": 3,
+    "description": "前端开发工具集合（翻译/闪记/时间戳转换）",
+    "permissions": [
+        "sidePanel",
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "minimum_chrome_version": "116",
+    "side_panel": {
+        "default_path": "sidepanel/index.html"
+    },
+    "action": {
+        "default_icon": {
+            "16": "images/icon16.png",
+            "32": "images/icon32.png",
+            "48": "images/icon48.png",
+            "128": "images/icon128.png"
+        },
+        "default_title": "前端开发百宝箱"
+    },
+    "content_scripts": [
+        {
+            "js": [
+                "content-script.js"
+            ],
+            "matches": [
+                "https://www.baidu.com/*"
+            ]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "sidepanel/index.html"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "commands": {
+        "_execute_action": {
+            "suggested_key": {
+                "default": "Ctrl+B",
+                "mac": "Command+B"
+            }
+        }
+    }
+}

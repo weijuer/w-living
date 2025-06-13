@@ -11,7 +11,7 @@
 
 <script setup>
 import { computed } from "vue";
-import { getDataJson } from "./data.js";
+import { getDataJson } from "../common/data.js";
 import VirtualScrollingList from "./VirtualScrollingList.vue";
 
 const items = computed(() => getDataJson(1000));

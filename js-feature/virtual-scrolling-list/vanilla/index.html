@@ -29,19 +29,39 @@
                 padding: 2rem;
             }
         }
+
+        @layer virtual-scrollling-list {
+            .virtual-list {
+                position: relative;
+                overflow: auto;
+                height: 400px;
+            }
+
+            .virtual-scroll-cursor {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                transition: transform .2s;
+            }
+
+            .virtual-list-item {
+                position: absolute;
+                padding: 0 10px;
+                border-bottom: 1px solid #eee;
+            }
+        }
     </style>
 </head>
 
 <body>
     <main id="app">
+        <h2> Virtual Scrolling List </h2>
         <div class="wrapper">
-            <div class="list">
-                <template v-for="item in items" :key="item">
-                    <div class="item">
-                        <div class="id">#{{ item.id }} - {{ item.text }}</div>
-                    </div>
+            <virtual-scrolling-list :items="items" :item-height="50">
+                <template #default="{ item }">
+                    <div class="id">#{{ item.id }} - {{ item.text }}</div>
                 </template>
-            </div>
+            </virtual-scrolling-list>
         </div>
     </main>
 
@@ -62,7 +82,7 @@
     <script type="importmap">
         {
           "imports": {
-            "vue": "../libs/vue/vue.esm-browser.js"
+            "vue": "../../libs/vue/vue.esm-browser.js"
           }
         }
     </script>
@@ -72,14 +92,14 @@
     <script type="module">
         import { createApp, ref, computed, reactive, onMounted } from "vue";
         import VirtualScrollingList from "./virtual-scrolling-list.js";
-        import { getData } from './data.js'
+        import { getDataJson } from '../common/data.js'
 
         const app = createApp({
             components: { VirtualScrollingList },
             setup() {
 
                 const items = computed(() => {
-                    return getData(10000);
+                    return getDataJson(10000);
                 });
 
                 onMounted(() => {

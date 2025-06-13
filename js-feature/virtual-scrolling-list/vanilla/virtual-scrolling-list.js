@@ -1,6 +1,6 @@
 export default {
     template: document.getElementById('virtual-list-template'),
-    name: 'virtual-list',
+    name: 'virtual-scrolling-list',
     props: {
         items: {
             type: Array,
