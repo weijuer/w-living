@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <form class="coffee-shop">
+        <h2>☕ Artisan Coffee Co.</h2>
+        <div class="subtitle">Crafted with passion, served with love</div>
+        <p>
+            <label for="coffee-select">Choose coffee:</label>
+            <select id="coffee-select">
+                <button>
+                    <selectedcontent></selectedcontent>
+                </button>
+                <option value="">Please select your brew</option>
+                <option value="espresso">
+                    <span class="icon" aria-hidden="true">☕</span>
+                    <span class="option-label">Espresso</span>
+                    <span class="option-desc">Bold shot</span>
+                    <span class="price">$2.50</span>
+                </option>
+                <option value="cappuccino">
+                    <span class="icon" aria-hidden="true">🥛</span>
+                    <span class="option-label">Cappuccino</span>
+                    <span class="option-desc">With steamed milk</span>
+                    <span class="price">$4.25</span>
+                </option>
+                <option value="latte">
+                    <span class="icon" aria-hidden="true">🍼</span>
+                    <span class="option-label">Latte</span>
+                    <span class="option-desc">Creamy espresso</span>
+                    <span class="price">$4.75</span>
+                </option>
+                <option value="mocha">
+                    <span class="icon" aria-hidden="true">🍫</span>
+                    <span class="option-label">Mocha</span>
+                    <span class="option-desc">With chocolate</span>
+                    <span class="price">$5.25</span>
+                </option>
+            </select>
+        </p>
+    </form>
+</body>
+</html>

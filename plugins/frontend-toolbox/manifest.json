@@ -25,14 +25,21 @@
         },
         "default_title": "前端开发百宝箱"
     },
+    "host_permissions": [
+        "*://*/*",
+        "<all_urls>"
+    ],
     "content_scripts": [
         {
+            "matches": [
+                "https://*/*",
+                "http://*/*"
+            ],
             "js": [
                 "content-script.js"
             ],
-            "matches": [
-                "https://www.baidu.com/*"
-            ]
+            "run_at": "document_start",
+            "all_frames": true
         }
     ],
     "web_accessible_resources": [

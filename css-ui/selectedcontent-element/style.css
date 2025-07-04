@@ -1,0 +1,135 @@
+select,
+::picker(select) {
+    appearance: base-select;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #8B4513, #F4A460);
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.coffee-shop {
+    background: rgba(255, 248, 240, 0.95);
+    padding: 2rem;
+    border-radius: 15px;
+    max-width: 600px;
+    margin: auto;
+}
+
+h2 {
+    text-align: center;
+    color: #8B4513;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    text-align: center;
+    font-style: italic;
+    color: #A0522D;
+    margin-bottom: 2rem;
+}
+
+p {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+label {
+    width: 120px;
+    font-weight: bold;
+    color: #654321;
+}
+
+select {
+    flex: 1;
+    border: 2px solid #D2B48C;
+    background: #FFF8DC;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: 0.4s;
+}
+
+select:hover,
+select:focus {
+    background: #F5DEB3;
+    border-color: #CD853F;
+}
+
+select::picker-icon {
+    color: #8B4513;
+    transition: rotate 0.4s;
+}
+
+select:open::picker-icon {
+    rotate: 180deg;
+}
+
+::picker(select) {
+    border: none;
+    background: #FFFAF0;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+    opacity: 0;
+    transition: all 0.4s allow-discrete;
+}
+
+::picker(select):popover-open {
+    opacity: 1;
+}
+
+@starting-style {
+    ::picker(select):popover-open {
+        opacity: 0;
+    }
+}
+
+option {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #FFF8DC;
+    border: 2px solid #D2B48C;
+    padding: 10px;
+    transition: 0.3s;
+}
+
+option:hover,
+option:focus {
+    background: #DEB887;
+    transform: translateX(5px);
+}
+
+option .icon {
+    font-size: 1.8rem;
+}
+
+/* Hide certain elements when displayed in selectedcontent */
+selectedcontent .icon,
+selectedcontent .option-desc,
+selectedcontent .price {
+    display: none;
+}
+
+.option-label {
+    font-weight: bold;
+    color: #8B4513;
+}
+
+.option-desc {
+    font-size: 0.85rem;
+    color: #A0522D;
+}
+
+.price {
+    margin-left: auto;
+    color: #CD853F;
+    font-weight: bold;
+}
