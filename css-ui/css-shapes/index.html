@@ -2,10 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>css shapes</title>
     <style>
+        @layer reset, layout, components;
+
         @layer reset {
             * {
                 margin: 0;
@@ -20,42 +22,159 @@
         }
 
         @layer layout {
+            .shapes-container {
+                display: grid;
+                grid-template-columns: repeat(auto-fit,
+                        minmax(min(200px, 100%), 1fr));
+                grid-auto-flow: dense;
+                gap: 1rem;
+                margin: 2rem 0;
+                padding: 0;
+                text-align: center;
+
+                >li {
+                    display: grid;
+                    place-content: center;
+                    min-height: 270px;
+                    margin: 0;
+                    padding: 0.6lh 0 1.5lh;
+                    font-size: 1.3em;
+                    box-shadow: none;
+                    border: 1px solid var(--pico-muted-border-color);
+                    position: relative;
+                    background: lightgray;
+                    border-radius: 10px;
+                    transition: 0.5s;
+                }
+            }
+        }
+
+        @layer components {
+            :root {
+                --size: 200px;
+            }
+
             .heart {
                 --c: red;
-                height: 200px;
-                width: 200px;
+                height: var(--size);
+                width: var(--size);
                 aspect-ratio: 1;
-                background:
-                    /* 1 */
-                    radial-gradient(circle at 60% 65%, var(--c) 64%, #0000 65%) top left/50% 50%,
-                    /* 2 */
-                    radial-gradient(circle at 40% 65%, var(--c) 64%, #0000 65%) top right/50% 50%,
-                    /* 3 */
-                    conic-gradient(from -45deg at 50% 85.5%, var(--c) 90deg, #0000 0) bottom/100% 50%;
+                background: radial-gradient(circle at 60% 65%,
+                        var(--c) 64%,
+                        #0000 65%) top left/50% 50%,
+                    radial-gradient(circle at 40% 65%,
+                        var(--c) 64%,
+                        #0000 65%) top right/50% 50%,
+                    conic-gradient(from -45deg at 50% 85.5%,
+                        var(--c) 90deg,
+                        #0000 0) bottom/100% 50%;
                 background-repeat: no-repeat;
             }
 
-            .heart2 {
-                --c: red;
-
-                height: 200px;
-                width: 200px;
+            .heart-clip {
+                height: var(--size);
+                width: var(--size);
                 aspect-ratio: 1;
-                background:
-                    radial-gradient(circle at 60% 65%, var(--c) 64%, #0000 65%) top left/50% 50%,
-                    radial-gradient(circle at 40% 65%, var(--c) 64%, #0000 65%) top right/50% 50%,
-                    radial-gradient(circle at 60% 35%, var(--c) 64%, #0000 65%) bottom left/50% 50%,
-                    radial-gradient(circle at 40% 35%, var(--c) 64%, #0000 65%) bottom right/50% 50%;
-                background-repeat: no-repeat;
+                border-image: radial-gradient(red 69%, #0000 70%) 84.5%/50%;
+                clip-path: polygon(-42% 0, 50% 91%, 142% 0);
             }
+
+            .hexagon {
+                width: var(--size);
+                aspect-ratio: cos(30deg);
+                clip-path: polygon(-50% 50%, 50% 100%, 150% 50%, 50% 0);
+                background: radial-gradient(#8A9B0F, #3B8686);
+            }
+
+            .octagon {
+                width: var(--size);
+                aspect-ratio: 1;
+                clip-path: polygon(-20% 50%, 50% 120%, 120% 50%, 50% -20%);
+                background: radial-gradient(#8A9B0F, #3B8686);
+            }
+
+            .star {
+                width: var(--size);
+                aspect-ratio: 1;
+                clip-path: polygon(50% 0,
+                        /* (1) */
+                        calc(50%*(1 + sin(.4turn))) calc(50%*(1 - cos(.4turn))),
+                        /* (2) */
+                        calc(50%*(1 - sin(.2turn))) calc(50%*(1 - cos(.2turn))),
+                        /* (3) */
+                        calc(50%*(1 + sin(.2turn))) calc(50%*(1 - cos(.2turn))),
+                        /* (4) */
+                        calc(50%*(1 - sin(.4turn))) calc(50%*(1 - cos(.4turn)))
+                        /* (5) */
+                    );
+                background: radial-gradient(#8A9B0F, #3B8686);
+            }
+
+            .curved-edge {
+                width: var(--size);
+                aspect-ratio: 3 / 2;
+                clip-path: ellipse(85% 100% at 50% 100%);
+                background: #40C0CB;
+            }
+
+            .curved-edge-mask {
+                width: var(--size);
+                aspect-ratio: 1;
+                mask: radial-gradient(60% 20% at top, #0000 calc(100% - 1px), #000);
+                background: #40C0CB;
+            }
+
+            .curved-edge-shape {
+                width: var(--size);
+                aspect-ratio: 1;
+                clip-path: shape(from 0 0,
+                        arc to 100% 0% of 120%,
+                        line to 100% 0,
+                        line to 100% 100%,
+                        line to 0 100%);
+                background: #40C0CB;
+            }
+
         }
     </style>
 </head>
 
 <body>
     <main>
-        <!-- <div class="heart"></div> -->
-        <div class="heart2"></div>
+        <ul class="shapes-container">
+            <!-- <li>
+                <div class="heart"></div>
+                <a href="#"> Heart </a>
+            </li>
+            <li>
+                <div class="heart-clip"></div>
+                <a href="#"> heart-clip </a>
+            </li>
+            <li>
+                <div class="hexagon"></div>
+                <a href="#"> hexagon </a>
+            </li>
+            <li>
+                <div class="octagon"></div>
+                <a href="#"> octagon </a>
+            </li>
+            <li>
+                <div class="star"></div>
+                <a href="#"> star </a>
+            </li> -->
+            <li>
+                <div class="curved-edge"></div>
+                <a href="#"> curved-edge </a>
+            </li>
+            <li>
+                <div class="curved-edge-mask"></div>
+                <a href="#"> curved-edge-mask </a>
+            </li>
+            <li>
+                <div class="curved-edge-shape"></div>
+                <a href="#"> curved-edge-shape </a>
+            </li>
+        </ul>
     </main>
 </body>
 
