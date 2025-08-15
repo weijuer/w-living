@@ -1,0 +1,28 @@
+:root {
+    // 颜色系统
+    --primary-color: #4f46e5; // 主色调
+    --primary-light: #818cf8; // 亮色调
+    --primary-dark: #3b34a9; // 暗色调
+    --text-primary: #333333; // 主要文本
+    --text-secondary: #666666; // 次要文本
+    --background: #ffffff; // 背景色
+    --background-alt: #f5f5f5; // 备用背景
+    --border-color: #e0e0e0; // 边框色
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); // 默认阴影
+
+    // 尺寸系统
+    --radius-sm: 4px; // 小半径
+    --radius-md: 8px; // 中半径
+    --radius-lg: 12px; // 大半径
+
+    // 间距系统
+    --space-xs: 4px; // 超小间距
+    --space-sm: 8px; // 小间距
+    --space-md: 16px; // 中间距
+    --space-lg: 24px; // 大间距
+
+    // 过渡系统
+    --transition-fast: 0.2s ease; // 快速过渡
+    --transition-normal: 0.3s ease; // 正常过渡
+    --transition-slow: 0.5s ease; // 慢速过渡
+}

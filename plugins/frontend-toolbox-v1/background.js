@@ -63,6 +63,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             chrome.sidePanel.open({ tabId: tab.id })
         ]);
 
+        console.log('generateAltText result :==>', result.status === 'fulfilled' ? result.value : result.reason.message);
 
         chrome.runtime.sendMessage({
             action: 'alt-text',

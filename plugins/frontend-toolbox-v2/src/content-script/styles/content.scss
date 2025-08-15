@@ -1,0 +1,82 @@
+@import "@/styles/variables";
+
+.ai-overlay {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 380px;
+    height: 500px;
+    z-index: 999999;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    background: var(--background);
+    transition: var(--transition-normal);
+
+    &__header {
+        padding: var(--space-md);
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        &-controls {
+            display: flex;
+            gap: var(--space-xs);
+
+            button {
+                width: 24px;
+                height: 24px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+    &__content {
+        padding: var(--space-md);
+        height: calc(100% - 56px);
+        overflow-y: auto;
+        font-size: 14px;
+        line-height: 1.5;
+
+        p {
+            margin-bottom: var(--space-sm);
+        }
+
+        code {
+            background: var(--background-alt);
+            padding: 2px 4px;
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+        }
+
+        pre {
+            background: var(--background-alt);
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            overflow-x: auto;
+            margin: var(--space-sm) 0;
+        }
+    }
+
+    // 响应式调整
+    @media (max-width: 768px) {
+        width: calc(100% - 40px);
+        height: 70vh;
+    }
+}

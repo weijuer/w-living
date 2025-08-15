@@ -1,0 +1,23 @@
+{
+    "name": "frontend-toolbox",
+    "private": true,
+    "version": "1.0.0",
+    "description": "前端开发百宝箱",
+    "main": "background.js",
+    "scripts": {
+        "build": "rollup -c rollup.config.mjs"
+    },
+    "keywords": [],
+    "license": "Apache 2.0",
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "26.0.1",
+        "@rollup/plugin-node-resolve": "15.2.3",
+        "dompurify": "^3.2.6",
+        "marked": "^16.1.1",
+        "rollup": "4.22.4",
+        "rollup-plugin-copy": "3.5.0"
+    },
+    "dependencies": {
+        "@material/web": "^2.3.0"
+    }
+}

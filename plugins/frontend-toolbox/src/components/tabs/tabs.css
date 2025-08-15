@@ -1,0 +1,43 @@
+:host {
+    --tab-active-bg: var(--primary, #007bff);
+    --tab-inactive-bg: var(--surface-2, #f0f0f0);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tab-header {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: var(--surface-1);
+}
+
+.tab-content {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+}
+
+::slotted([role="tab"]) {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background: var(--tab-inactive-bg);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+::slotted([role="tab"].active) {
+    background: var(--tab-active-bg);
+    color: white;
+}
+
+::slotted([role="tabpanel"]) {
+    display: none;
+    height: 100%;
+}
+
+::slotted([role="tabpanel"].active) {
+    display: block;
+}

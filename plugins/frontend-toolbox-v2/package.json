@@ -1,0 +1,27 @@
+{
+  "name": "frontend-toolbox-v2",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "pinia": "^3.0.3",
+    "vue": "^3.5.18"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.4",
+    "@types/node": "^24.3.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitejs/plugin-vue-jsx": "^5.0.1",
+    "@vue/tsconfig": "^0.7.0",
+    "sass": "^1.90.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2",
+    "vue-tsc": "^3.0.5",
+    "webextension-polyfill-ts": "^0.26.0"
+  }
+}

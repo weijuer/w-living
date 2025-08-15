@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @layer reset, layout, components;
+
+        @layer reset {
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+        }
+
+        @layer layout {
+            body {
+                font-size: 16px;
+            }
+
+            main {
+                padding-inline: 1rem;
+            }
+
+            fieldset~fieldset {
+                margin-block-start: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>HTML 2025 Features</h1>
+        <fieldset>
+            <legend>Details</legend>
+            <h5>Details default</h5>
+            <details>
+                <summary>Details</summary>
+                Longer content goes here
+            </details>
+
+            <h5>Details with name</h5>
+            <details open name="sidebar_panel">
+                <summary>Main info</summary>
+                <!-- controls -->
+                Longer content goes here
+            </details>
+            <details name="sidebar_panel">
+                <summary>Style</summary>
+                <!-- controls -->
+                Longer content goes here
+            </details>
+        </fieldset>
+
+        <fieldset>
+            <legend>Dialog</legend>
+            <h5>Dialog with form</h5>
+            <button onclick="confirmDialog.showModal()">Open dialog</button>
+            <dialog id="confirmDialog">
+                <form method="dialog">
+                    Are you sure?
+                    <button value="1">Yes</button>
+                    <button value="0">No</button>
+                    <button onclick="confirmDialog.requestClose()">RequestClose</button>
+                </form>
+            </dialog>
+            <output id="confirmDialogResult"></output>
+
+            <h5>Dialog with command</h5>
+            <button commandfor="mydialog" command="show-modal">
+                Show modal dialog
+            </button>
+            <dialog id="mydialog">
+                <button commandfor="mydialog" command="close">
+                    Close
+                </button>
+                <p>
+                    dialog content
+                </p>
+            </dialog>
+        </fieldset>
+
+        <fieldset>
+            <legend>Popover</legend>
+            <button popovertarget="foo">Toggle the popover</button>
+            <div id="foo" popover>Popover content</div>
+
+            <div id="tooltip" popover="hint">
+                Save this document
+            </div>
+            <button popovertarget="tooltip">
+                Save
+            </button>
+        </fieldset>
+
+
+        <fieldset>
+            <legend>Embed SVG</legend>
+            <svg>
+                <circle cx="50" cy="50" r="50" />
+            </svg>
+        </fieldset>
+
+        <fieldset>
+            <legend>Canvas</legend>
+            <canvas id="canvas" layoutsubtree="true">
+                <p>Hello world!</p>
+            </canvas>
+            <script type="module">
+                const ctx = canvas.getContext("2d");
+                const text = canvas.querySelector("p");
+                ctx?.drawElement?.(text, 30, 0);
+            </script>
+        </fieldset>
+
+        <fieldset>
+            <legend>Model</legend>
+            <pre>
+                <model src="assets/3d/Car.glb"></model>
+            </pre>
+        </fieldset>
+
+        <fieldset>
+            <legend>WebXR Device API</legend>
+            <script type="module">
+                const xr = navigator.xr;
+                const session = await xr?.requestSession("immersive-vr");
+            </script>
+        </fieldset>
+
+        <fieldset>
+            <legend>WebGPU</legend>
+            <script type="module">
+                const adapter = await navigator.gpu?.requestAdapter();
+                const device = await adapter?.requestDevice();
+            </script>
+        </fieldset>
+
+        <fieldset>
+            <legend>HTML import</legend>
+            <script type="module">
+                import { TabList } from "./tablist.html" with { type: 'html' };
+                customElements.define("tab-list", TabList);
+            </script>
+        </fieldset>
+
+        <fieldset>
+            <legend>Declarative Custom Elements</legend>
+            <definition name="progress-ring">
+                <template shadowmode="open">
+                    <div id="base" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                        aria-valuenow="{{root.attributes.percentage.value}}">
+                        <slot>{{ root.attributes.percentage.value }}%</slot>
+                    </div>
+                    <style>
+                        #base {
+                            display: flex;
+                            align-items: center;
+                            height: 1rem;
+                            background-color: blue;
+                        }
+                    </style>
+                </template>
+            </definition>
+
+            <progress-ring value="50"></progress-ring>
+        </fieldset>
+
+        <fieldset>
+            <legend>Search UI</legend>
+            <search>
+                <form>
+                    <label>Find: <input name="q" type="search"></label>
+                    <button>Go!</button>
+                </form>
+            </search>
+        </fieldset>
+
+    </main>
+
+    <script type="module">
+        const confirmDialog = document.getElementById('confirmDialog');
+        const confirmDialogResult = document.getElementById('confirmDialogResult');
+        confirmDialog.addEventListener('close', (e) => {
+            confirmDialogResult.textContent = e.target.returnValue === '1' ? 'Yes' : 'No';
+        });
+    </script>
+</body>
+
+</html>

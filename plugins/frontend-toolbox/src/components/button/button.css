@@ -1,0 +1,93 @@
+@import url('../common/var.css');
+
+:host {
+    /* 尺寸变量 */
+    --w-button-padding-x: 16px;
+    --w-button-padding-y: 8px;
+    --w-button-radius: var(--w-radius-medium);
+    --w-button-font-size: var(--w-font-size-medium);
+
+    /* 颜色变量 */
+    --w-button-primary: var(--color-primary);
+    --w-button-success: var(--color-success);
+    --w-button-warning: var(--color-warning);
+    --w-button-danger: var(--color-danger);
+}
+
+.w-button {
+    /* 基础样式 */
+    position: relative;
+    padding: var(--w-button-padding-y) var(--w-button-padding-x);
+    border: 1px solid transparent;
+    border-radius: var(--w-button-radius);
+    font-size: var(--w-button-font-size);
+    cursor: pointer;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        transform 0.1s;
+
+    /* 尺寸扩展 */
+    &.small {
+        --w-button-padding-x: 12px;
+        --w-button-padding-y: 6px;
+        --w-button-font-size: var(--w-font-size-small);
+    }
+
+    &.medium {
+        /* 使用默认值 */
+    }
+
+    &.large {
+        --w-button-padding-x: 20px;
+        --w-button-padding-y: 10px;
+        --w-button-font-size: var(--w-font-size-large);
+    }
+
+    /* 类型样式 */
+    &--primary {
+        background-color: var(--w-button-primary);
+        color: white;
+
+        &:hover {
+            background-color: color-mix(in srgb, var(--w-button-primary), black 10%);
+        }
+    }
+
+    &.success {
+        background-color: var(--w-button-success);
+        color: white;
+    }
+
+    /* 其他类型样式... */
+
+    /* 交互状态 */
+    &:active {
+        transform: translateY(1px);
+    }
+
+    &[disabled] {
+        opacity: var(--w-disabled-opacity);
+        cursor: not-allowed;
+    }
+}
+
+/* 主题样式 */
+.theme-light {
+    background-color: var(--color-bg);
+    color: var(--color-contrast-high);
+    border-color: var(--color-contrast-lower);
+
+    &:hover {
+        background-color: var(--color-bg-dark);
+    }
+}
+
+.theme-dark {
+    background-color: var(--color-contrast-high);
+    color: var(--color-bg);
+
+    &:hover {
+        background-color: var(--color-contrast-higher);
+    }
+}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Vars</title>
+    <style>
+        @layer base, components, utilities;
+
+        @layer base {
+            :root {
+                --color: red;
+                --bg-red: red;
+                --bg-blue: blue;
+                --ON: initial;
+                --OFF: ;
+            }
+
+            body {
+                --angle: 180deg;
+                --font-size: 16px;
+                --bg-color: white;
+                --text-color: black;
+
+                font-size: var(--font-size);
+                /* background: linear-gradient(var(--angle), red, blue); */
+                background-color: var(--bg-color);
+                color: var(--text-color);
+            }
+
+            main {
+                --spacing: 2rem;
+
+                padding: var(--spacing);
+
+                div+div {
+                    margin-top: calc(var(--spacing) / 2);
+                }
+            }
+
+            h2 {
+                font-size: clamp(1.5rem, 5vw, 2.5rem);
+            }
+
+            .tight-spacing {
+                padding: calc(var(--spacing) / 2);
+            }
+
+            @property --r {
+                syntax: '<angle>';
+                inherits: false;
+                initial-value: 0deg;
+            }
+
+            @media (200px <=width <=500px) {
+                body {
+                    --angle: 90deg;
+                    --font-size: 12px;
+                }
+            }
+
+            @media (1000px <=width <=1200px) {
+                body {
+                    --font-size: 18px;
+                }
+            }
+
+            @media screen and (prefers-color-scheme: dark) {
+                body {
+                    --bg-color: black;
+                    --text-color: white;
+                }
+            }
+        }
+
+        @layer components {
+            button {
+                --h: 100;
+                --s: 50%;
+                --l: 50%;
+                --a: 1;
+                --spread: 5px;
+
+                cursor: pointer;
+                box-shadow: 0 0 20px var(--spread) black;
+                transform: var(--scale, scale(1)) var(--translate, translate(0));
+                background-color: hsl(var(--h), var(--s), var(--l), var(--a));
+
+                &:hover {
+                    --l: 75%;
+                    --spread: 10px;
+                    --scale: scale(0.9);
+                }
+
+                &:not([disabled]):active {
+                    --translate: translate(0, 2px);
+                }
+
+                &:focus {
+                    --s: 75%;
+                }
+
+                &[disabled] {
+                    cursor: not-allowed;
+                    --s: 0%;
+                    --a: 0.5;
+                }
+            }
+
+            .star {
+                --r: 0deg;
+
+                display: inline-flex;
+                transform: rotate(var(--r));
+                animation: spin 1s linear infinite;
+            }
+
+            .module {
+                --dark: var(--OFF);
+
+                padding: var(--dark, 1rem);
+                background-color: var(--dark, black);
+                color: var(--dark, white);
+                letter-spacing: var(--dark, 0.2px);
+                border: var(--dark, 3px solid #888);
+
+                &.dark {
+                    --dark: var(--ON);
+                }
+            }
+
+            .hover-section div:hover {
+                background-color: var(--hover-color);
+
+                &::after {
+                    content: "I am" attr(style);
+                    margin-left: 1rem;
+                    border-color: var(--hover-color);
+                }
+            }
+
+            .mover {
+                --size: 50px;
+
+                width: var(--size);
+                height: var(--size);
+                background-color: var(--bg-red);
+                position: absolute;
+                top: calc(var(--mouse-x, 0) - var(--size) / 2);
+                left: calc(var(--mouse-y, 0) - var(--size) / 2);
+            }
+
+            @keyframes spin {
+                to {
+                    --r: 360deg;
+                }
+            }
+        }
+
+        @layer utilities {
+            @function --double-z() returns <number> {
+                result: calc(var(--z) * 2);
+            }
+
+            @function --max-plus-x(--list, --x) {
+                result: calc(max(var(--list)) + var(--x));
+            }
+
+            @function --suitable-font-size() {
+                --size: 16px;
+
+                @media (width > 1000px) {
+                    --size: 20px;
+                }
+
+                result: var(--size);
+            }
+
+            @mixin --gradient-text(--from type(color): mediumvioletred,
+                --to type(color): teal,
+                --angle: to bottom right,
+            ) {
+                color: env(--from, env(--to));
+
+                @supports (background-clip: text) or (-webkit-background-clip: text) {
+                    @env --gradient: linear-gradient(env(--angle), env(--from), env(--to));
+                    background: env(--gradient, env(--from));
+                    color: transparent;
+                    -webkit-background-clip: text;
+                    background-clip: text;
+                }
+            }
+
+            @mixin --sr-text {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border-width: 0;
+            }
+        }
+
+        @layer layouts {
+            .function-double-z {
+                --z: 3;
+                position: relative;
+                z-index: --double-z();
+            }
+
+            .function-max-plus-x {
+                --list: 10px, 20px, 30px;
+                --x: 10px;
+
+                width: --max-plus-x(var(--list), var(--x));
+                height: 100px;
+                background-color: var(--bg-blue);
+            }
+
+            .suitable-fz {
+                font-size: --suitable-font-size();
+            }
+
+            .gradient-text {
+                @apply --gradient-text(pink, powderblue);
+            }
+
+            .sr-text {
+                @apply --sr-text;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h2>CSS Vars</h2>
+        <div class="tight-spacing">
+            <p>It's a star</p>
+        </div>
+        <button>Click me</button>
+        <button disabled>Disabled</button>
+        <div class="star"> 🌟 </div>
+
+        <div class="module">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi magnam quos, reprehenderit voluptas minima
+            animi aliquid modi aut accusantium inventore tempora iusto similique unde! Necessitatibus quidem recusandae
+            perspiciatis nostrum quam.
+        </div>
+
+        <div class="module dark">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi magnam quos, reprehenderit voluptas minima
+            animi aliquid modi aut accusantium inventore tempora iusto similique unde! Necessitatibus quidem recusandae
+            perspiciatis nostrum quam.
+        </div>
+
+        <section class="module hover-section">
+            <div style="--hover-color: red;">red</div>
+            <div style="--hover-color: blue;">blue</div>
+            <div style="--hover-color: yellow;">yellow</div>
+        </section>
+
+        <div class="mover"></div>
+
+        <div class="function-double-z">
+            <p class="sr-text">I am a sr text</p>
+        </div>
+
+        <div class="function-max-plus-x"></div>
+        <div class="suitable-fz">I am change font size</div>
+        <div class="gradient-text">I am a gradient text</div>
+    </main>
+
+    <script type="module">
+        /* const root = document.documentElement;
+        const mover = document.querySelector('.mover');
+
+        root.addEventListener('mousemove', (e) => {
+            mover.style.setProperty('--mouse-x', `${e.clientY}px`);
+            mover.style.setProperty('--mouse-y', `${e.clientX}px`);
+        }) */
+    </script>
+</body>
+
+</html>

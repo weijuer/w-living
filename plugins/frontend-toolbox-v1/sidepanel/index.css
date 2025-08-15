@@ -42,6 +42,8 @@
     gap: 8px;
     border-bottom: 1px solid var(--border-color);
   }
+
+  .chat-box {}
 }
 
 /* 在components层添加时光机样式 */
