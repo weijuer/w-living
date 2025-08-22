@@ -2,14 +2,14 @@ import { createOverlay } from "./overlay";
 import { sendMessageToBackground } from "../api/chrome";
 import "./styles/content.scss";
 
-alert("Content script loaded");
-
 // 创建悬浮窗
 const overlay = createOverlay();
 document.body.appendChild(overlay);
 
 // 监听来自后台的消息
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("Content script received message:", request, sender);
+
     if (request.type === "SHOW_OVERLAY") {
         overlay.style.display = "block";
         sendResponse({ success: true });
@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // 获取选中文本并发送给AI
-async function processSelectedText() {
+export async function processSelectedText() {
     const selection = window.getSelection()?.toString();
     if (!selection) return;
 
@@ -31,7 +31,10 @@ async function processSelectedText() {
         });
         if (response.success) {
             // 在悬浮窗中显示结果
-            overlay.querySelector(".content").innerHTML = response.data;
+            const contentElem = overlay.querySelector(".content");
+            if (contentElem) {
+                contentElem.innerHTML = response.data;
+            }
         }
     } catch (error) {
         console.error("Error processing text:", error);

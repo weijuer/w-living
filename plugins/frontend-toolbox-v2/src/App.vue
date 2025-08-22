@@ -3,9 +3,9 @@ import ChatWindow from "./components/ChatWindow.vue";
 </script>
 
 <template>
-    <div>
-        <ChatWindow />
-    </div>
+    <ChatWindow />
 </template>
 
-<style scoped></style>
+<style lang="scss">
+@use "@/styles/app.scss";
+</style>

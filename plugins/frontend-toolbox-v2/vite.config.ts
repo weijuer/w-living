@@ -25,11 +25,12 @@ export default defineConfig({
             },
             output: {
                 entryFileNames: (chunkInfo) => {
+                    console.log("Chunk info:", chunkInfo);
                     // 根据入口文件设置不同输出目录
                     if (chunkInfo.name === "contentScript") {
-                        return "content-script/[name].js";
+                        return "content-script/index.js";
                     } else if (chunkInfo.name === "background") {
-                        return "background/[name].js";
+                        return "background/index.js";
                     }
                     return "sidepanel/[name].js";
                 },

@@ -18,21 +18,21 @@ chrome.action.onClicked.addListener(async (tab) => {
 
     if (!sidebarOpen) {
         await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
+            target: { tabId: tab.id as number },
             files: ["content.js"],
         });
     }
 
     chrome.storage.local.set({ sidebarOpen: !sidebarOpen });
-    chrome.tabs.sendMessage(tab.id, {
+    chrome.tabs.sendMessage(tab.id as number, {
         action: "toggleSidebar",
         state: !sidebarOpen,
     });
 });
 
-async function generateAltText(imgSrc) {
+async function generateAltText(imgSrc: string) {
     // Create the model (we're not checking availability here, but will simply fail with an exception
-    const session = await self.LanguageModel.create({
+    const session = await (self as any).LanguageModel.create({
         temperature: 0.0,
         topK: 1.0,
         expectedInputs: [{ type: "image" }],
@@ -62,7 +62,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             // chrome.action.openPopup()
 
             // This will open the panel in all the pages on the current window.
-            chrome.sidePanel.open({ tabId: tab.id }),
+            chrome.sidePanel.open({ tabId: tab?.id as number }),
         ]);
 
         chrome.runtime.sendMessage({

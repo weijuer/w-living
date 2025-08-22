@@ -1,26 +1,17 @@
 <template>
     <div class="prompt-input">
-        <textarea
-            v-model="inputValue"
-            class="prompt-input__field"
-            placeholder="输入您的问题..."
-            :disabled="disabled"
-            @keydown.enter.prevent="handleSubmit"
-        ></textarea>
-        <button
-            class="prompt-input__button"
-            :disabled="!inputValue.trim() || disabled"
-            @click="handleSubmit"
-        >
+        <textarea v-model="inputValue" class="prompt-input__field" placeholder="输入您的问题..." :disabled="disabled"
+            @keydown.enter.prevent="handleSubmit"></textarea>
+        <button class="prompt-input__button" :disabled="!inputValue.trim() || disabled" @click="handleSubmit">
             发送
         </button>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from "vue";
+import { ref } from "vue";
 
-const props = defineProps<{
+defineProps<{
     disabled?: boolean;
 }>();
 
@@ -47,11 +38,11 @@ const handleSubmit = () => {
 
     &__field {
         flex: 1;
-        min-height: 40px;
-        max-height: 120px;
+        min-height: 64px;
+        max-height: 324px;
         padding: 10px 12px;
         border: 1px solid #ddd;
-        border-radius: 20px;
+        border-radius: 8px;
         resize: none;
         outline: none;
         font-size: 14px;

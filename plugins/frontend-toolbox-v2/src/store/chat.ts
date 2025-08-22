@@ -1,22 +1,27 @@
-import { defineStore } from 'pinia'
-import { sendMessageToBackground } from '@/api/chrome'
+import { defineStore } from "pinia";
+import { sendMessageToBackground } from "../api/chrome";
 
 interface Message {
-    content: string
-    isUser: boolean
-    timestamp?: Date
+    content: string;
+    isUser: boolean;
+    timestamp?: Date;
 }
 
-export const useChatStore = defineStore('chat', {
+export const useChatStore = defineStore("chat", {
     state: () => ({
         messages: [] as Message[],
-        history: [] as { id: string; title: string; messages: Message[] }[],
+        history: [] as {
+            id: string;
+            title: string;
+            messages: Message[];
+            read: boolean;
+        }[],
         currentSessionId: null as string | null,
         settings: {
-            model: 'gpt-3.5-turbo',
+            model: "gpt-3.5-turbo",
             temperature: 0.7,
-            maxTokens: 1000
-        }
+            maxTokens: 1000,
+        },
     }),
     actions: {
         async sendMessage(content: string) {
@@ -24,32 +29,32 @@ export const useChatStore = defineStore('chat', {
             const userMessage: Message = {
                 content,
                 isUser: true,
-                timestamp: new Date()
-            }
-            this.messages.push(userMessage)
+                timestamp: new Date(),
+            };
+            this.messages.push(userMessage);
 
             try {
                 // 发送请求到background service worker
-                const response = await sendMessageToBackground('AI_REQUEST', {
+                const response = await sendMessageToBackground("AI_REQUEST", {
                     prompt: content,
                     model: this.settings.model,
                     temperature: this.settings.temperature,
-                    maxTokens: this.settings.maxTokens
-                })
+                    maxTokens: this.settings.maxTokens,
+                });
 
                 if (response.success) {
                     // 添加AI响应
                     this.messages.push({
                         content: response.data,
                         isUser: false,
-                        timestamp: new Date()
-                    })
-                    return response.data
+                        timestamp: new Date(),
+                    });
+                    return response.data;
                 }
-                throw new Error('Failed to get AI response')
+                throw new Error("Failed to get AI response");
             } catch (error) {
-                console.error('Error sending message:', error)
-                throw error
+                console.error("Error sending message:", error);
+                throw error;
             }
         },
         newSession() {
@@ -58,31 +63,32 @@ export const useChatStore = defineStore('chat', {
                 this.history.push({
                     id: this.currentSessionId,
                     title: this.messages[0].content.substring(0, 30),
-                    messages: [...this.messages]
-                })
+                    messages: [...this.messages],
+                    read: false,
+                });
             }
             // 创建新会话
-            this.currentSessionId = Date.now().toString()
-            this.messages = []
+            this.currentSessionId = Date.now().toString();
+            this.messages = [];
         },
         loadSession(id: string) {
-            const session = this.history.find(s => s.id === id)
+            const session = this.history.find((s) => s.id === id);
             if (session) {
-                this.currentSessionId = id
-                this.messages = [...session.messages]
+                this.currentSessionId = id;
+                this.messages = [...session.messages];
             }
         },
         updateSettings(newSettings: Partial<typeof this.settings>) {
-            this.settings = { ...this.settings, ...newSettings }
+            this.settings = { ...this.settings, ...newSettings };
             // 保存到chrome.storage
-            chrome.storage.sync.set({ settings: this.settings })
-        }
+            chrome.storage.sync.set({ settings: this.settings });
+        },
     },
     getters: {
-        hasUnread: state => state.history.some(s => !s.read),
-        currentSessionTitle: state => {
-            if (!state.messages.length) return 'New Chat'
-            return state.messages[0].content.substring(0, 30) + '...'
-        }
-    }
-})
+        hasUnread: (state) => state.history.some((s) => !s.read),
+        currentSessionTitle: (state) => {
+            if (!state.messages.length) return "New Chat";
+            return state.messages[0].content.substring(0, 30) + "...";
+        },
+    },
+});

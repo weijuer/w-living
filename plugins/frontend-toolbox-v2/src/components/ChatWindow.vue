@@ -1,21 +1,15 @@
 <template>
     <div class="chat-window">
-        <div class="chat-header">
-            <h3>AI Assistant</h3>
-            <div class="controls">
-                <button @click="minimize">{{ isMinimized ? "+" : "-" }}</button>
-                <button @click="close">×</button>
-            </div>
-        </div>
-        <div class="chat-messages" v-if="!isMinimized">
-            <Message v-for="(msg, index) in messages" :key="index" :content="msg.content" :is-user="msg.isUser" />
+        <div class="chat-messages">
+            <Message v-for="(msg, index) in messages" :key="index" :content="parseMarkdown(msg.content)"
+                :is-user="msg.isUser" class="markdown-content" />
             <div v-if="isLoading" class="loading-indicator">
                 <div class="dot"></div>
                 <div class="dot"></div>
                 <div class="dot"></div>
             </div>
         </div>
-        <PromptInput v-if="!isMinimized" @submit="sendMessage" :disabled="isLoading" />
+        <PromptInput @submit="sendMessage" :disabled="isLoading" />
     </div>
 </template>
 
@@ -23,47 +17,39 @@
 import { ref, onMounted } from "vue";
 import Message from "./Message.vue";
 import PromptInput from "./PromptInput.vue";
+import { PromptService } from "@/services/PromptService";
+import { Logger } from "../utils/log";
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
-const isMinimized = ref(false);
 const isLoading = ref(false);
 const messages = ref([]);
-
-
-let session;
-
-async function runPrompt(prompt, params) {
-    try {
-        if (!session) {
-            session = await LanguageModel.create(params);
-        }
-        return session.prompt(prompt);
-    } catch (e) {
-        console.log('Prompt failed');
-        console.error(e);
-        console.log('Prompt:', prompt);
-        // Reset session
-        reset();
-        throw e;
-    }
-}
-
-async function reset() {
-    if (session) {
-        session.destroy();
-    }
-    session = null;
-}
+const promptService = ref(null);
+const logger = new Logger({ prefix: "ChatWindow" });
 
 async function initDefaults() {
-    const defaults = await LanguageModel.params();
-    console.log("Model default:", defaults);
-    if (!("LanguageModel" in self)) {
-        console.error("Model not available");
-        return;
+    try {
+        const defaults = await PromptService.getParams();
+        logger.info("Model default:", defaults);
+    } catch (error) {
+        logger.error("Failed to get model parameters:", error);
     }
 }
 
-const sendMessage = async (content) => {
+/**
+ * 将Markdown转换为安全的HTML
+ * @param content - 原始Markdown内容
+ * @returns 净化后的HTML字符串
+ */
+const parseMarkdown = (content) => {
+    if (!content) return '';
+    // 先使用marked解析Markdown为HTML
+    const html = marked.parse(content);
+    // 再使用DOMPurify净化HTML，防止XSS攻击
+    return DOMPurify.sanitize(html);
+};
+
+async function sendMessage(content) {
     if (!content.trim()) return;
 
     // 添加用户消息
@@ -71,48 +57,70 @@ const sendMessage = async (content) => {
     isLoading.value = true;
 
     try {
-        const params = {
+        const createOptions = {
             initialPrompts: [
-                { role: 'system', content: 'You are a helpful and friendly assistant.' }
-            ],
-            temperature: 1,
-            topK: 3
+                { role: 'system', content: 'You are a helpful and friendly assistant. Format your responses using Markdown for better readability.' }
+            ]
         };
-        // 调用AI API
-        const response = await runPrompt(content, params);
-        messages.value.push({ content: response, isUser: false });
-    } catch (error) {
-        messages.value.push({
-            content: "Error: Could not get response from AI",
-            isUser: false,
+
+        // 初始化PromptService
+        if (!promptService.value) {
+            promptService.value = await PromptService.create(createOptions);
+        }
+
+        // 创建流式响应的临时消息对象
+        const responseMessage = { content: '', isUser: false };
+        messages.value.push(responseMessage);
+
+        // 调用流式API并处理响应
+        const stream = promptService.value.sendPromptStreaming(content, {
+            temperature: 1,
+            topK: 3,
+            stream: true
         });
+
+        // 逐块处理流式响应
+        for await (const chunk of stream) {
+            responseMessage.content += chunk;
+            // 触发Vue响应式更新
+            messages.value = [...messages.value];
+        }
+    } catch (error) {
+        logger.error("Streamed prompt failed:", error);
+        // 替换错误消息
+        const lastMessage = messages.value[messages.value.length - 1];
+        if (lastMessage && !lastMessage.isUser) {
+            lastMessage.content = "Error: Could not stream response from AI";
+        } else {
+            messages.value.push({
+                content: "Error: Could not stream response from AI",
+                isUser: false,
+            });
+        }
     } finally {
         isLoading.value = false;
     }
-};
-
-const minimize = () => {
-    isMinimized.value = !isMinimized.value;
-};
-
-const close = () => {
-    // 可以发送事件给父组件关闭窗口
-    emit("close");
-};
-
-// 定义事件
-const emit = defineEmits(["close"]);
-
+}
 
 onMounted(async () => {
     await initDefaults();
+
+    // 设置配额溢出处理
+    if (promptService.value) {
+        promptService.value.onQuotaOverflow(() => {
+            messages.value.push({
+                content: "Warning: Your input quota has been exceeded.",
+                isUser: false,
+            });
+        });
+    }
 });
 </script>
 
 <style lang="scss" scoped>
 .chat-window {
-    width: 380px;
-    height: 500px;
+    width: 100dvw;
+    height: 100dvh;
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -187,6 +195,58 @@ onMounted(async () => {
 
     40% {
         transform: scale(1);
+    }
+}
+
+/* 添加Markdown内容样式 */
+.markdown-content {
+    .content {
+        // 基础样式
+        line-height: 1.6;
+        white-space: pre-wrap;
+
+        // 标题样式
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 1em 0 0.5em;
+            font-weight: bold;
+        }
+
+        // 列表样式
+        ul,
+        ol {
+            margin: 0.5em 0;
+            padding-left: 2em;
+        }
+
+        // 代码块样式
+        pre {
+            background: #f5f5f5;
+            padding: 1em;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: monospace;
+        }
+
+        // 行内代码样式
+        code {
+            background: #f5f5f5;
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        // 引用样式
+        blockquote {
+            border-left: 4px solid #ddd;
+            padding-left: 1em;
+            margin: 0.5em 0;
+            color: #666;
+        }
     }
 }
 </style>

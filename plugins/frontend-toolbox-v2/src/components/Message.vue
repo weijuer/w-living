@@ -1,18 +1,26 @@
 <template>
-    <div class="message" :class="{ 'message--user': isUser }">
+    <div class="message" :class="{ 'message--user': isUser }" ref="messageRef">
         <div class="message__bubble">
-            <div class="message__content">{{ content }}</div>
+            <div class="message__content" v-html="content"></div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { onMounted, ref } from "vue";
 
 defineProps<{
     content: string;
     isUser: boolean;
 }>();
+
+const messageRef = ref<HTMLDivElement>();
+
+onMounted(() => {
+    if (messageRef.value) {
+        messageRef.value.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" })
+    }
+})
 </script>
 
 <style lang="scss" scoped>
