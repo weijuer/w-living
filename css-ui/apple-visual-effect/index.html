@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>apple-visual-effect</title>
+    <style>
+        @layer reset, layout;
+
+        @layer reset {
+            * {
+                box-sizing: border-box;
+            }
+
+            html,
+            body {
+                height: 100%;
+            }
+        }
+
+        @layer layout {
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: black;
+            }
+
+            .toolbar {
+                display: flex;
+                border-radius: 12px;
+                -apple-visual-effect: -apple-system-glass-material;
+                height: 75px;
+                width: 100vw;
+                background-color: white;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="toolbar"></div>
+    </main>
+</body>
+
+</html>
